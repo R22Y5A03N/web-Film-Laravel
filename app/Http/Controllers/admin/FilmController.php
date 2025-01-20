@@ -1,6 +1,5 @@
 <?php
-
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Film;
@@ -8,38 +7,66 @@ use Illuminate\Http\Request;
 
 class FilmController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        // Ambil semua tahun unik dari tabel films
-        $years = Film::select('tahun_diterbitkan')->distinct()->orderBy('tahun_diterbitkan', 'desc')->get();
+        $films = Film::all();
+        return view('admin.films.index', compact('films'));
+    }
 
-        // Query untuk mengambil data film
-        $films = Film::query();
+    public function create()
+    {
+        return view('admin.films.create');
+    }
 
-        // Filter berdasarkan tahun jika input ada
-        if ($request->has('tahun_diterbitkan') && $request->tahun_diterbitkan) {
-            $films->where('tahun_diterbitkan', $request->tahun_diterbitkan);
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'judul_film' => 'required|string|max:255',
+            'bintang_film' => 'required|string|max:255',
+            'sutradara' => 'required|string|max:255',
+            'genre' => 'required|string|max:255',
+            'tahun_diterbitkan' => 'required|digits:4',
+            'gambar' => 'nullable|image|max:2048',
+        ]);
+
+        if ($request->hasFile('gambar')) {
+            $validated['gambar'] = $request->file('gambar')->store('films', 'public');
         }
+        
 
-        // Filter berdasarkan genre jika input ada
-        if ($request->has('genre') && $request->genre != '') {
-            // Menambahkan filter untuk genre
-            $films->where('genre', 'like', '%' . $request->genre . '%');
+        Film::create($validated);
+
+        return redirect()->route('admin.films.index')->with('success', 'Film berhasil ditambahkan.');
+    }
+
+    public function edit(Film $film)
+    {
+        return view('admin.films.edit', compact('film'));
+    }
+
+    public function update(Request $request, Film $film)
+    {
+        $validated = $request->validate([
+            'judul_film' => 'required|string|max:255',
+            'bintang_film' => 'required|string|max:255',
+            'sutradara' => 'required|string|max:255',
+            'genre' => 'required|string|max:255',
+            'tahun_diterbitkan' => 'required|digits:4',
+            'gambar' => 'nullable|image|max:2048',
+        ]);
+
+        if ($request->hasFile('gambar')) {
+            $validated['gambar'] = $request->file('gambar')->store('films', 'public');
         }
+        
+        $film->update($validated);
 
-        // Dapatkan data film
-        $films = $films->get();
+        return redirect()->route('admin.films.index')->with('success', 'Film berhasil diupdate.');
+    }
 
-        // Ambil daftar genre yang unik dari semua film yang ada
-        $genres = Film::all()->flatMap(function ($film) {
-            return explode(',', $film->genre); // Mengasumsikan genre dipisahkan dengan koma
-        })->unique()->values(); // Mengambil genre yang unik
-
-        // Paginate genres jika jumlahnya lebih dari 10
-        $genres = $genres->take(10);  // Ambil maksimal 10 genre pertama
-        $remainingGenres = $genres->count() > 10 ? $genres->slice(10) : collect(); // Sisanya jika ada lebih dari 10
-
-        // Kirim data ke view
-        return view('user.films.index', compact('films', 'years', 'genres', 'remainingGenres'));
+    public function destroy(Film $film)
+    {
+        $film->delete();
+        return redirect()->route('admin.films.index')->with('success', 'Film berhasil dihapus.');
     }
 }
