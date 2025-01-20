@@ -1,0 +1,127 @@
+:root {
+    --primary-red: #E50914;
+    --dark-bg: #141414;
+    --dark-lighter: #2F2F2F;
+}
+
+.features-section {
+    background-color: var(--dark-lighter);
+    padding: 4rem 0;
+}
+
+.feature-icon {
+    font-size: 2.5rem;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.hero-header {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5)), url('../img/background_film.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.movie-card {
+    transition: transform 0.3s;
+    cursor: pointer;
+}
+
+.movie-card:hover {
+    transform: scale(1.05);
+}
+
+.category-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1;
+}
+
+.rating-stars {
+    color: #ffd700;
+}
+
+.custom-navbar {
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+}
+
+.search-bar {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.search-bar::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.category-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    overflow-x: auto;
+    padding: 1rem 0;
+    scrollbar-width: none;
+}
+
+.category-pill {
+    padding: 0.5rem 1.5rem;
+    background-color: #2d2d2d;
+    /* Warna gelap */
+    color: #fff;
+    /* Warna teks putih */
+    border-radius: 50px;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.category-pill:hover {
+    background-color: var(--primary-red);
+    /* Warna merah saat hover */
+    transform: translateY(-2px);
+}
+
+.category-pill.active {
+    background-color: var(--primary-red);
+    /* Warna pill aktif */
+    color: white;
+    /* Warna teks pill aktif */
+}
+
+.btn-link {
+    text-decoration: none;
+    color: var(--primary-red);
+    /* Warna merah untuk tombol Show More */
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.collapse {
+    margin-top: 1rem;
+}
+
+@media (max-width: 767px) {
+    .category-pill {
+        font-size: 12px;
+        padding: 0.5rem 1rem;
+    }
+
+    .category-pills {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+.custom-btn {
+    width: 200px;
+    /* Atur lebar yang sama */
+    text-align: center;
+    /* Pusatkan teks di tombol */
+}
+.custom-btn.px-4{
+    background-color: red;
+}
